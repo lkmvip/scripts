@@ -1,46 +1,48 @@
-# 顺丰速运 (弃坑)
+# 网易严选
 
 > 代码已同时兼容 Surge & QuanX, 使用同一份签到脚本即可
 
 > 2020.1.11 QuanX 在`190`版本开始, 获取 Cookie 方式需要从`script-response-body`改为`script-request-header`
 
-> 2020.1.22 据实测顺丰的 Cookie 只能存活 1 天不到，大家先弃坑
+> 2020.1.22 签到脚本会导致账号异常, 请停止使用
 
 ## 配置 (Surge)
 
 ```properties
 [MITM]
-*.weixinjia.net
+*.you.163.com
 
 [Script]
-http-request ^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.cookie.js
-cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/sfexpress/sfexpress.js
+http-request ^https:\/\/m\.you\.163\.com\/xhr\/points\/index\.json script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/yanxuan/yanxuan.cookie.js
+cron "10 0 0 * * *" script-path=https://raw.githubusercontent.com/chavyleung/scripts/master/yanxuan/yanxuan.js
 ```
 
 ## 配置 (QuanX)
 
 ```properties
 [MITM]
-*.weixinjia.net
+*.you.163.com
 
 [rewrite_local]
 # 189及以前版本
-^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init url script-response-body sfexpress.cookie.js
+^https:\/\/m\.you\.163\.com\/xhr\/points\/index\.json url script-response-body yanxuan.cookie.js
 # 190及以后版本
-^https:\/\/sf\-integral\-sign\-in\.weixinjia\.net\/app\/init url script-request-header sfexpress.cookie.js
+^https:\/\/m\.you\.163\.com\/xhr\/points\/index\.json url script-request-header yanxuan.cookie.js
+
+
 
 [task_local]
-1 0 * * * sfexpress.js
+1 0 * * * yanxuan.js
 ```
 
 ## 说明
 
-1. 先把`*.weixinjia.net`加到`[MITM]`
+1. 先把`*.you.163.com`加到`[MITM]`
 2. 再配置重写规则:
    - Surge: 把两条远程脚本放到`[Script]`
-   - QuanX: 把`sfexpress.cookie.js`和`sfexpress.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
-3. 打开 APP, 访问下`我的顺丰` > `去签到` (访问下`去签到`的页面即可, 不用点`签到`)
-4. 系统提示: `获取Cookie: 成功` （如果不提示获取成功, 尝试杀进程再进签到页面）
+   - QuanX: 把`yanxuan.cookie.js`和`yanxuan.js`传到`On My iPhone - Quantumult X - Scripts` (传到 iCloud 相同目录也可, 注意要打开 quanx 的 iCloud 开关)
+3. 打开 APP, 访问下`个人`>`每日签到`(右上角)
+4. 系统提示: `获取Cookie: 成功` （如果不提示获取成功, 尝试杀进程再进`个人`>`每日签到`）
 5. 最后就可以把第 1 条脚本注释掉了
 
 > 第 1 条脚本是用来获取 cookie 的, 用浏览器访问一次获取 cookie 成功后就可以删掉或注释掉了, 但请确保在`登录成功`后再获取 cookie.
